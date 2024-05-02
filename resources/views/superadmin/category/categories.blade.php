@@ -1,35 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Categories List') }}
-                    <div class="mb-2" style="float: right;">
-                        <a class="btn btn-success" onClick="addCategory()" data-bs-toggle="modal" data-bs-target="#addCategoryModal"> Create Category</a>
-                    </div>
+@include('layouts.superadmin_sidebar')
+<main class="main-content position-relative border-radius-lg ">
+    @include('layouts.main_navbar')
+    <div class="container-fluid py-4">
+        <div class="card">
+            <div class="card-header">{{ __('Categories List') }}
+                <div class="mb-2" style="float: right;">
+                    <a class="btn btn-success" onClick="addCategory()" data-bs-toggle="modal" data-bs-target="#addCategoryModal"> Create Category</a>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-responsive" id="datatable-crud-category">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Created at</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div>
-                        </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="datatable-crud-category">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created at</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 @include('superadmin.category.category_modal_form')
 <script type="text/javascript">
     $(document).ready(function() {
@@ -44,18 +44,23 @@
             ajax: "{{ route('categories') }}",
             columns: [{
                     data: 'id',
-                    name: 'id'
+                    name: 'id',
+                    render: function(data) {
+                        return '<p class="text-xs font-weight-bold mb-0">' + data + '</p>';
+                    }
                 },
                 {
                     data: 'name',
-                    name: 'name'
+                    name: 'name',
+                    render: function(data) {
+                        return '<p class="text-xs font-weight-bold mb-0">' + data + '</p>';
+                    }
                 },
                 {
                     data: 'created_at',
                     name: 'created_at',
                     render: function(data) {
-                        // Assuming data is in ISO format like "YYYY-MM-DD HH:MM:SS"
-                        return moment(data).format('MMMM Do YYYY, h:mm:ss a'); // Format as desired
+                        return '<p class="text-xs font-weight-bold mb-0">' + moment(data).format('MMMM Do YYYY, h:mm:ss a') + '</p>';
                     }
                 },
                 {
