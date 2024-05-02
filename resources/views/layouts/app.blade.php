@@ -40,9 +40,9 @@
 
 <body>
     <div id="app">
-        <main class="">
+        <body class="g-sidenav-show   bg-gray-100">
             @yield('content')
-        </main>
+        </body>
     </div>
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
