@@ -5,21 +5,25 @@
 <main class="main-content position-relative border-radius-lg ">
     @include('layouts.main_navbar')
     <div class="container-fluid py-4">
-        <div class="card">
-            <div class="card-header">{{ __('Categories List') }}
-                <div class="mb-2" style="float: right;">
-                    <a class="btn btn-success" onClick="addCategory()" data-bs-toggle="modal" data-bs-target="#addCategoryModal"> Create Category</a>
-                </div>
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5 id="titleHeading"></h5>
+                <a class="btn btn-success btn-sm" style="float: right;" onClick="addCategory()" data-bs-toggle="modal" data-bs-target="#addCategoryModal"> Create Category</a>
             </div>
+            <!-- <div class="card-header">{{ __('Categories List') }}
+                    <div class="mb-2" style="float: right;">
+                        <a class="btn btn-success" onClick="addCategory()" data-bs-toggle="modal" data-bs-target="#addCategoryModal"> Create Category</a>
+                    </div>
+                </div> -->
             <div class="card-body">
                 <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0" id="datatable-crud-category">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created at</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Id</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Created at</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Action</th>
                             </tr>
                         </thead>
                     </table>
@@ -32,6 +36,12 @@
 </main>
 @include('superadmin.category.category_modal_form')
 <script type="text/javascript">
+    var title = "Categories List";
+    var breadcrumb_title = "Categories";
+    document.getElementById("titleHeading").innerHTML = title;
+    document.getElementById("pageHeading").innerHTML = breadcrumb_title;
+    // document.getElementById("breadcrumbHeading").innerHTML = breadcrumb_title;
+    
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
