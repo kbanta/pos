@@ -1,38 +1,46 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('User List') }}
-                    <div class="mb-2" style="float: right;">
-                        <a class="btn btn-success" onClick="addAccount()" data-bs-toggle="modal" data-bs-target="#addUserModal"> Create User</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-responsive" id="datatable-crud">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Created at</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div>
-                        </div>
+@include('layouts.superadmin_sidebar')
+<main class="main-content position-relative border-radius-lg ">
+    @include('layouts.main_navbar')
+    <div class="container-fluid py-4">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5 id="titleHeading"></h5>
+                <a class="btn btn-success btn-sm" style="float: right;" onClick="addAccount()" data-bs-toggle="modal" data-bs-target="#addUserModal"> Create User</a>
+            </div>
+            <!-- <div class="card-header">{{ __('User List') }}
+            <div class="mb-2" style="float: right;">
+                <a class="btn btn-success" onClick="addAccount()" data-bs-toggle="modal" data-bs-target="#addUserModal"> Create User</a>
+            </div>
+        </div> -->
+            <div class="card-body">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="datatable-crud">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Id</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Email</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Created at</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 @include('superadmin.account.user_modal_form')
 <script type="text/javascript">
+    var title = "Accounts List";
+    var breadcrumb_title = "Accounts";
+    document.getElementById("titleHeading").innerHTML = title;
+    document.getElementById("pageHeading").innerHTML = breadcrumb_title;
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
@@ -45,22 +53,30 @@
             ajax: "{{ route('users') }}",
             columns: [{
                     data: 'display_id',
-                    name: 'id'
+                    name: 'id',
+                    render: function(data) {
+                        return '<p class="text-xs font-weight-bold mb-0">' + data + '</p>';
+                    }
                 },
                 {
                     data: 'name',
-                    name: 'name'
+                    name: 'name',
+                    render: function(data) {
+                        return '<p class="text-xs font-weight-bold mb-0">' + data + '</p>';
+                    }
                 },
                 {
                     data: 'email',
-                    name: 'email'
+                    name: 'email',
+                    render: function(data) {
+                        return '<p class="text-xs font-weight-bold mb-0">' + data + '</p>';
+                    }
                 },
                 {
                     data: 'created_at',
                     name: 'created_at',
                     render: function(data) {
-                        // Assuming data is in ISO format like "YYYY-MM-DD HH:MM:SS"
-                        return moment(data).format('MMMM Do YYYY, h:mm:ss a'); // Format as desired
+                        return '<p class="text-xs font-weight-bold mb-0">' + moment(data).format('MMMM Do YYYY, h:mm:ss a') + '</p>';
                     }
                 },
                 {
