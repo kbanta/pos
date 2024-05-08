@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -187,7 +188,7 @@ class SuperadminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'role' => ['required', 'string', 'max:255'],
-       ]);
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
@@ -262,7 +263,7 @@ class SuperadminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'brand' => ['required', 'string', 'max:255'],
-       ]);
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
@@ -336,7 +337,7 @@ class SuperadminController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'category' => ['required', 'string', 'max:255'],
-       ]);
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
@@ -358,6 +359,100 @@ class SuperadminController extends Controller
         $category->delete();
         return response()->json([
             'success' => 'category deleted successfully'
+        ]);
+    }
+    // Products Function...
+    public function products()
+    {
+        if (request()->ajax()) {
+            return datatables()->of(Product::select('*')->where('deleted_at', '=', null))
+                ->addColumn('action',  function ($row) {
+
+                    $btn = '<a href="javascript:void(0)" onClick="editProduct(' . $row->id . ')" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm">Edit</a>';
+
+                    $btn = $btn . ' <a href="javascript:void(0)"  data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-danger btn-sm delete-product">Delete</a>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->addIndexColumn()
+                ->make(true);
+        }
+        $category = Category::all();
+
+        return view('superadmin.product.products', compact('category'));
+    }
+    public function registerProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product' => ['required', 'string', 'max:255'],
+            'barcode' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'string', 'max:255'],
+        ], [
+            'category.required' => 'The category field is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $product = new Product();
+            $product->name = $request->input('product');
+            $product->category_id = $request->input('category_id');
+            $product->supplier_id = "1";
+            $product->barcode = $request->input('barcode');
+            $product->description = $request->input('prod_description');
+            $product->price = $request->input('price');
+            $product->quantity_available = "1";
+
+            $product->save();
+            return response()->json([
+                'success' => 'product added successfully'
+            ]);
+        }
+    }
+    public function editproduct(Request $request)
+    {
+        $product  = Product::join('categories', 'products.category_id', '=', 'categories.id')
+            ->where('products.id', '=', $request->id)
+            ->select('*','products.id as pid','categories.name as category_name')->first();
+        return Response()->json($product);
+    }
+    public function updateproduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product' => ['required', 'string', 'max:255'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $product = Product::find($request->id);
+            $product->name = $request->input('product');
+            
+            $product->category_id = $request->input('category_id');
+            $product->supplier_id = "1";
+            $product->barcode = $request->input('barcode');
+            $product->description = $request->input('prod_description');
+            $product->price = $request->input('price');
+            $product->quantity_available = "1";
+            $product->save();
+        }
+
+        return response()->json([
+            'success' => 'product updated successfully'
+        ]);
+    }
+    public function deleteproduct($id)
+    {
+        $product = Product::find($id);
+        $product->delete();
+        return response()->json([
+            'success' => 'Product deleted successfully'
         ]);
     }
 }
